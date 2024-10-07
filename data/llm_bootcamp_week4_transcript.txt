@@ -1,0 +1,741 @@
+Video URL: https://youtu.be/y81_wD_U3fA?si=Z80JG4Ak8X_rg4DV
+0:02
+Tim Lee: Okay, all right, welcome everybody Tim Lee: to session 4. We've only been doing this for 4 weeks, but it feels like a lifetime. In some sense of immersion into Llms.
+0:14
+Tim Lee: And I think one of the promises that I made for you at the beginning of this course is like, you know, when you get in, you're going to start to understand a lot of the vocabulary concept and discussions that are floating around that space. Hopefully, you're starting to realize. Gosh, I'm starting to be able to follow at least the the topics that have been going on in Llms
+0:37
+Tim Lee: these days. And so we have kind of covered, actually, a decent range right now. So last week was a cool week. I love function calling right? Because function calling is the moment where Lms can really enter the world, because the the moment that you can empower them to interact in some way, then you know, then it can actually the the things that it can, the potential applications really start to explode from there.
+1:01
+Tim Lee: So at this point. Tim Lee: really like, you should have everything that you need knowledge wise to implement your capstone. You know. That we're gonna demo in a couple of weeks. I'm very excited about the demo day.
+1:13
+Tim Lee: So the next 2 topics that we're gonna cover this week and next week are more for kind of
+1:19
+Tim Lee: after the demo day. And so I'm expecting that it won't really influence. Kind of what you're doing
+1:25
+Tim Lee: this week is a fun topic. It's where we take functions to next, which is. Tim Lee: I like, everyone talks about agentic programming and agents. So we're like, what the heck
+1:35
+Tim Lee: does everyone mean by when they're talking about that? And what are the you know? What are the frameworks around that. And how do they work?
+1:42
+Tim Lee: And then kind of getting along, going along with the where we started chatting before class we were talking
+1:50
+Tim Lee: about like the fact that with the functions we observed that, hey, gosh! It is hard to get the Lms. To follow your instructions precisely right. So in this way. They deviates from, you know, traditional programming where you can kind of like, just be really clear with instructions. And off it goes.
+2:06
+Tim Lee: And so we talked about a few tricks that we do, and patterns for for kind of improving that situation. But one thing that's really effective is fine tuning.
+2:16
+Tim Lee: fine tuning is also a tool where you can influence kind of the behavior or adherence of an Llm. To your instructions.
+2:28
+Tim Lee: and then in the final week we'll do some other extra Demos again on how to corral and put guardrails around the Llm. And that's really, for, like the, you know, 5 10% scenario, right? A a lot of the tools that we're working with now, they get us like 80% solutions pretty quickly, which is kind of the cool thing about
+2:47
+Tim Lee: the cool thing about Llm development is how, how, how fast you can get an 80% solution. So fine tuning is really about kind of that that last that last mile coverage.
+2:58
+Tim Lee: Okay, so let's let's talk about agents. Right? People are very excited about agents, and it is kind of interesting. It's a very at the frontier of Llms. So let me share my screen.
+3:10
+Tim Lee: Has anyone seen Devon AI by chance Tim Lee: like, if you give you a moment to chat. Yes or no.
+3:19
+Tim Lee: I'm just curious. If anyone's heard of Devon Devin. AI. Marcelo: Yeah, I heard of it.
+3:26
+Tim Lee: Okay. So Tim Lee: this in this lab, we're gonna learn all about what agents are.
+3:34
+Tim Lee: And we're actually gonna build in order Tim Lee: to learn and appreciate it. We're going to attempt to build a baby version of Devon AI,
+3:44
+Tim Lee: and we're actually gonna do it using by building our own agent framework as well. I think it's really gonna help us appreciate what exactly is going behind the scenes with these existing frameworks.
+3:55
+Tim Lee: So let me show you kind of a brief clip of Devon. AI actually, I think I have to make sure I'm sharing my audio. Let me try doing the share again.
+4:12
+Tim Lee: And then I'm just gonna Tim Lee: also Tim Lee: make sure that everyone's muted here.
+4:22
+Tim Lee: Okay. Tim Lee: okay, so here we go. Devin AI, hey, everyone. My name is Sarah, and I'm going to show you how Devin, our AI software engineer, can autonomously learn from a blog post within a few minutes Devin successfully generated this desktop background image for me with my name on it. Oh, whoops! I forgot. I watch Youtube at 2 X
+4:38
+Tim Lee: that's Tim Lee: wow! Tim Lee: Hey, everyone! My name is Sarah, and I'm going to show you how Devin, our AI software engineer, can autonomously learn from a blog post
+4:50
+Tim Lee: within a few minutes Devin successfully generated this desktop background image for me with my name on it.
+4:56
+Tim Lee: So all I had to do was send this blog post in a message to Devin. From there. Devin actually does all the work for me. Starting with reading this blog post and figuring out how to run the code.
+5:08
+Tim Lee: In a couple of minutes Devin's actually made a lot of progress, and if we jump to the middle here, you can see that Devin's been able to find and fix some edge cases and bugs that the blog post did not cover for me.
+5:21
+Tim Lee: and if we jump to the end we can see that Devin sends me the final result which I love.
+5:28
+Tim Lee: I also got 2 bonus images here and here. Tim Lee: So let me know if you guys see anything hidden in these.
+5:41
+Tim Lee: Okay, so pretty cool like. So I think last time when we
+5:46
+Tim Lee: saw the when we worked with functions. I mean, it was hard enough to get the AI to behave well when it was only something as simple as like, get movie show times. And you know, like wrangling it. Now, things like Devin it's following hundreds of steps and navigating that by itself.
+6:09
+Tim Lee: Now Harley is acknowledging that, you know you only do, recorded Demos, because, you know it tends to be very brittle. I mean, he's not wrong, but at the same time this, this is going further than you know. What we what we are going with right now. Now.
+6:27
+Tim Lee: We are. Tim Lee: We're going to be playing with Tim Lee: how to implement this using agents.
+6:35
+Tim Lee: So Tim Lee: what exactly, are agents? Now, this will be my interpretation of it, because I think, of course, everyone has their different definitions for it. I think that the
+6:48
+Tim Lee: the Tim Lee: 1st thing that agents can do that our our little movies app couldn't do last week is do more significant planning.
+7:00
+Tim Lee: So in our movies app that we built last week, it's pretty much one shot, and in fact, a lot of Llm. Apps are kind of like one exchange, right? What's the what was the movie show times. I'll go fetch the movie. Id. Oh, what is the order id for this customer. I'll go and look for this customer's order. Id. So it's very like one transaction, one shot transactions.
+7:23
+Tim Lee: So with agents. The difference is before you embark on the thing. You have to kind of like map out a multi-step plan. So any situation where you have to take a task, and you have to break it up into a number of subtasks. Then that is getting to the realm of agents, because there's a lot of techniques and strategies for how to do planning.
+7:46
+Tim Lee: So, for example, if you kind of pay attention to the screen screenshot and let's see if we can. Let's see if we can kind of like find and fix through it. But you notice that on the right hand side of Devin
+8:02
+Tim Lee: you have these 4 elements, the shell, the browser, the editor, and the planner. So that that's like function calling on steroids. We gave. We gave our app last week some amount of context.
+8:15
+Tim Lee: and you do certain limited things. Now with this AI, they kind of gave it full access to a shell.
+8:21
+Tim Lee: So it has a python environment that it can kind of influence and control. It has the browser where it can go and look things up on the Internet. It has the editor which, of course, has the code. And then the thing I wanted to call out was the planner. So I think she showed in a moment.
+8:40
+Tim Lee: let's see if we can find and look at a still for the planner. Tim Lee: So here's okay.
+8:48
+Tim Lee: So you see in the planner here, it's actually quite a simple thing. Tim Lee: The planner here is basically a plan that you and I might write
+8:56
+Tim Lee: in order to accomplish something which is a Markdown checklist of broken down tasks, right? Something as simple as that really helps to guide the agents. Sanity, because you know how agents you know how like Lms get insane pretty quickly, right? They they lose the they lose the plot pretty easily.
+9:14
+Tim Lee: So by by 1st creating a plan, then you can. You can use that to always go and re anchor this behavior. So one attribute of agents is it has it has the need. It's doing something higher, level goal wise that it needs to have a plan.
+9:28
+Tim Lee: Tool use is the same as we did last week. So that's nothing's different about that. So it's it's it's it's enabled to do and use different tools that you provided memory is something that we're going to play with this week.
+9:40
+Tim Lee: It's a very, it's a very abstract concept. But in this case it's as simple as the fact that Devin here has an editor that has all the files. So you may have heard of Claude artifacts. So Claude does something similar here, or V 0 for you know. I forget the company names vercel or something I forget who makes be 0 and so they have to have. They give access to a set of files, to the AI to work with.
+10:08
+Tim Lee: and then orchestration. So one of the things with AI that, I think, is very obvious and easy to understand is that we've been laughing about it and joking about it. But you know, once you start to give the AI more and more instructions. The adherence or its ability to follow every single line or center. That solution
+10:25
+Tim Lee: goes. Sentence goes down and down and down. So you know, if you have a half page or a 1 page prompt, which is actually pretty reasonable, and that might encompass part of the system. Okay, great. Well, now, I need to include a if I'm building Devin, I need to include the tester
+10:41
+Tim Lee: or the verifier, or the or the designer right?
+10:48
+Tim Lee: And so you can imagine that being like a 10 page prompt. Tim Lee: And so it's too much. It's too overwhelming. And so one aspect of agents that I think the most natural and easy to understand is that, hey? I need to create some scope around the roles so that it can do that small thing
+11:05
+Tim Lee: much more successfully Tim Lee: right. And so when you scope down an Llm. It, it tends to be able to do that very well. Now, now that you've scoped it.
+11:17
+Tim Lee: It's doing such a small thing. Then you need, of course, orchestrate. Tim Lee: because now I need to kind of take the output of one, plug it back into the input of another. And then maybe I need to do that in some kind of like borderline state machine fashion, where I'm like juggling between them situationally depending on like, what's what's happening in the task.
+11:40
+Tim Lee: So Tim Lee: so again, why, agents re-anchor back to.
+11:45
+Tim Lee: I want the opportunity for the Lm. To do a higher level function, some a goal that's a bigger. And so we're bringing out this toolbox. Now, this is at this stage kind of we're enter. We're entering frontier world for Llms or toy world.
+12:02
+Tim Lee: I don't believe there's really any production apps that are using agents that I've heard of. They're still far too experimental, brittle, you know. They don't work consistently.
+12:17
+Tim Lee: However, as you can see with Devin, there's glimmers here. And actually.
+12:23
+Tim Lee: if you've already observed in the last 6, 3 weeks that you've been doing this class. There's new advancements that are pretty significant being released every week. So what's kind of laughable or impossible today actually check back in a month or so, and you might find something entirely different. So this is, we're definitely at the frontier here. But
+12:43
+Tim Lee: you know, it's pretty interesting to play with now. There are at least 4 frameworks that are commonly mentioned when people think about agents. So Lane Chain was the Og.
+12:53
+Tim Lee: They were the 1st kid on the block, because they were the 1st ones to this topic.
+12:59
+Tim Lee: And so in some sense they're one of the most widespread. They went off and did some thinking, and then they built.
+13:07
+Tim Lee: It's more powerful younger Sibling Lane graph. So this is built by the same team. But they wanted some more even more expressive, powerful, you know, semantics around agents, and Microsoft has their solution. Autogen.
+13:20
+Tim Lee: And there's another one called Crew AI. That's somewhat somewhat popular. So I think what's interesting about these frameworks, especially like Lane, Chain and Lane graph that are open source is that there's a lot to learn by just like digging under the hood
+13:34
+Tim Lee: and just exploring them. But my personal bias is I. I really dislike these 4 frameworks because I think
+13:42
+Tim Lee: I think that we are it. It really hides from you some of the most interesting aspects of agents, because
+13:50
+Tim Lee: they what they do is they battle tested Tim Lee: these prompts. I I put them in quotes because you know, what what does battle testing mean in such a
+14:01
+Tim Lee: it's such a young field. Right? So, anyway, they have used these prompts, and then what they do is they wrap these classes around them to really create distance between you and the prompt.
+14:12
+Tim Lee: and then and then. Tim Lee: and then they kind of encourage you to use the classes directly.
+14:17
+Tim Lee: The problem with that is is that it's a it's a very leaky abstraction, because the classes and their chains break all the time.
+14:27
+Tim Lee: and you can't see as easily, you know, or you know.
+14:35
+Tim Lee: Now, luckily, there's these growing observability tools where you know now, it actually is a little bit easier to see what's going on.
+14:41
+Tim Lee: But it's it's it's pretty hard to repair it, because, like, you're not sure where that, you know, prompt is getting injected.
+14:49
+Tim Lee: So what we're actually gonna do is we're actually gonna build it from scratch today.
+14:54
+Tim Lee: And I think once we do that you'll start to be able to go back and look at these and say, Oh, I understand. Kind of like what what's happening here.
+15:05
+Tim Lee: So Tim Lee: like I said, today, we're gonna build out a simple, our version of a Devon AI, and it's I'll make the task a little bit easier. So our Devon's gonna be a little bit less open ended than their Devin. I just want to be able to take a relatively simple website like like this.
+15:28
+Tim Lee: which is basically like a landing page. Right? So a non dynamic website. And I want to say, Hey, maybe Devin, can you implement this website? And I think you know that it's like I said, it's getting better and better. But if you were today to take this screenshot and paste it into chat, gpt and say like Clone. This
+15:49
+Tim Lee: at least as of the last time I tried it. It does a terrible job. Tim Lee: so clearly, going from screenshot directly to high fidelity working code
+15:59
+Tim Lee: doesn't work Tim Lee: right? So what we're gonna do is we're gonna approach this in the same way that I mean, we would approach this, I think, in real life, when, if you and I are building this mock.
+16:11
+Tim Lee: I think I think the way that we approach it, especially if we're coaching junior engineers is, you're gonna break it up into very small pieces, and then you're gonna take it step by step, and check at each step. Because if you go and just try to like slam out. You know, 50 lines of HTML and 100 lines of Css.
+16:27
+Tim Lee: And then it's not working. It's really hard to debug right? Because it's it's the 1st time you run it. So really, what you want to do is like you want to build it brick by brick and test it at each moment.
+16:37
+Tim Lee: Right? Is it fair enough? That's how we would do it at engineers to to increase the probability of of a successful implementation.
+16:44
+Tim Lee: Yeah. So we'll help our baby Devin do the same thing. Tim Lee: We will map out a plan
+16:51
+Tim Lee: a roadmap that will follow. That's a set of small, low risk steps that will eventually get us to this screenshot that's implemented.
+17:00
+Tim Lee: and then we will implement one small milestone and then check it
+17:05
+Tim Lee: before we go on to another small milestone and check it. So we'll try to imitate the pattern of a more seasoned developer. As part of this process.
+17:14
+Tim Lee: Okay? So I'm not gonna walk through milestone. One milestone one is just we're gonna boot up our.
+17:20
+Tim Lee: you know. Now, favorite chain lit starter application. So we just need a scaffold to work with.
+17:27
+Tim Lee: And then let me let me let me demonstrate to you milestone, too. So so you understand, like what our target is. So let's see, here, open up cursor.
+17:44
+Tim Lee: Sorry. Tim Lee: So yeah, let's give this a run. Kinglet. Run milestone
+17:54
+Tim Lee: 2.
+18:00
+Tim Lee: Okay. So this type of app takes. I I pasted in this this screenshot. So I took the code that I got from the pre work.
+18:10
+Tim Lee: and then I am allowing it to parse this thing. And I'm saying, Tim Lee: map out the milestones.
+18:19
+Tim Lee: So Milestone 2 is just the ability where I mean, we're actually, we're baby stepping ourselves here. So it's our it's going to be our 1st agent.
+18:28
+Tim Lee: And it's a very simple agent. We just want to be able to take as an input. This image and then generate.
+18:36
+Tim Lee: You know this. Now I'm using a trick here Tim Lee: that's really common in prompt engineering, which is.
+18:43
+Tim Lee: I could have just said, Hey, make me the milestones for this, and just give it no further instructions. But it's really helpful to do something called chain of thought planning, which includes the idea of like really just talking aloud about your work. So I made it like note and notice and verbalize like everything that it's saying like, let's say about the header. It's position at the top, obviously, but that has the logo that's centered.
+19:09
+Tim Lee: and then I, the 2 buttons on the right. Now, if you don't have it. Say it out loud, and you just have it implemented. It might. I've actually had it where it's like all 3 were just in the middle, right, or actually, or Jive was up here, and the 2 buttons like we're below it. So I'm trying to have it like note
+19:28
+Tim Lee: things, so that when it comes back and does the implementation, it's it's more likely to actually be following that note. So I have it do this, and I have it like, think through like variety of ways, to approach different aspects of the layout challenge. And then finally, just like as you saw in the Devon screenshot.
+19:48
+Tim Lee: Have. I have a Markdown style checklist that I want it, the late, the system to follow like check by check.
+19:56
+Tim Lee: And in order to implement this. Tim Lee: Let's take a look at and discuss this a little bit. So I wanted to output a milestone setup. This is just the python thing. So, for people who know Python well, this is this is no big deal sorry the Markdown is choosing to bold this, and I don't want it to it needs to be called underscore underscore init
+20:15
+Tim Lee: underscore underscore.py. It's a convention of python to label this thing as a python module.
+20:22
+Tim Lee: and then we'll have our base agent. Now let's let's take a look at this base agent together for a moment.
+20:29
+Tim Lee: because I want to try to build this abstraction slowly. So you're really following along
+20:34
+Tim Lee: this part of the agent here is really the code that's in the starter app.
+20:43
+Tim Lee: So if I look at Milestone one. The starter app
+20:49
+Tim Lee: has essentially this function called generate response, and then it has
+20:55
+Tim Lee: but fundamentally this call to open AI, Tim Lee: and then this weird looking syntax to receive the stream response.
+21:02
+Tim Lee: Right? So and then you. And then you have this like message message history like feature. Right? So this is just table stakes. For basically, you know, messaging Openai, of course.
+21:15
+Tim Lee: But the weakness of this is that I can't change my system message. So the whole, the whole point of having multiple agents is like, well, I hear the planner and you'll be the implementer and you'll be the reviewer. I need to be able to change his identity.
+21:29
+Tim Lee: So I just took this chunk of code, and I copied it Tim Lee: into the body of the agent here, except there's this 1st part here that replaces the system message. And notice that I'm doing this as a copy, because I don't want to disturb the original history. But like, if I'm being handed a conversation as an agent. I need to replace it with my, it's like, it's like, it's like that movie split where he has, like all those different identities. Right? I just need to chop off the original system message temporarily. I'll do it in a copy, replace it with your instructions.
+22:02
+Tim Lee: and then let you do whatever you're gonna do like, I don't. I can't predict what's gonna happen right like. But I I've given you the instructions.
+22:09
+Tim Lee: And then, as from a class perspective. I just need you to hold the prompt
+22:14
+Tim Lee: right? So the way that you instantiate it Tim Lee: later is, I
+22:20
+Tim Lee: create my prompt that says, Hey, you're you're gonna stop as the planner, and I want you to generate an output that looks like this. And then I create my agent. So if you lift the hood of Crew AI, for example, or lane chain. And then you can look at the agent we've already. We've already implemented 15. The 1st 15%
+22:38
+Tim Lee: of crew and link chain, which is just a holder of these prompts. Associated with this role.
+22:50
+Tim Lee: So this is milestone 2. Tim Lee: Now with milestone 3.
+22:57
+Tim Lee: We have to in order for us to maybe maybe make it Baby Devin. We have to give it an ongoing context for the files.
+23:07
+Tim Lee: right? So like. Just as just as Claude has artifacts, and Devin has its little area, we need something similar.
+23:16
+Tim Lee: and in order to do this I made a very naive implementation.
+23:21
+Tim Lee: or I'm suggesting a very naive implementation, which is a folder called artifacts. Tim Lee: And then I want agents to be able to write into that folder.
+23:30
+Tim Lee: So the way that I'm going to do that is, I'm going to have a function called update artifact.
+23:37
+Tim Lee: and that will enable you tell the agent. Hey? Whatever you want to write down. Tim Lee: just put the file name and the content of the file, and I'll proxy it into that space.
+23:48
+Tim Lee: Not only will I do that? But now I've augmented the base agent class in this file.
+23:55
+Tim Lee: so that at the beginning of every Tim Lee: prompt I'll append to it
+24:02
+Tim Lee: the context of the entire architects. Full artifacts. Folder was kind of.
+24:08
+Tim Lee: you know. Obviously, we can't do that in real life. But because this example is so constrained. It just has the plan.md index dot HTML and styles dot css, we're just gonna like.
+24:20
+Tim Lee: always, you know, be giving it in the context of the 1st system. Message
+24:28
+Tim Lee: a. Tim Lee: all of those, all of those files. Tim Lee: So Priyanka asked the question, what do we mean by artifacts here?
+24:37
+Tim Lee: Okay, so I just mean, I just mean a file, an output. Tim Lee: some some tangible thing.
+24:44
+Tim Lee: So in this case it's just a file. Tim Lee: right? Want to be able to generate these files.
+24:50
+Tim Lee: Okay, so let's take a quick look at what that looks like.
+25:05
+Tim Lee: Okay, try to scan.
+25:21
+Tim Lee: Okay. And so let me Tim Lee: let me actually
+25:26
+Tim Lee: okay. So my artifacts folder is empty right now. Tim Lee: So at this moment Tim Lee: it has not
+25:33
+Tim Lee: saved anything. Tim Lee: And this is actually really important to remember, because Tim Lee: Llms. You have to remember like when you're building this thing with that's going to follow multiple steps unless you manually put it into a loop.
+25:45
+Tim Lee: Right? It's only going to ever take one step at a time. Tim Lee: And so if you do a function call or you do a message, it's gonna choose one or the other. And so this case, as it's getting its footing, it's 1st just doing this.
+26:00
+Tim Lee: So it's not gonna call Tim Lee: of the function call to write this because only Lms, you only get one shot. You get one input
+26:08
+Tim Lee: and then generates the output right? So
+26:15
+Tim Lee: I'm gonna I'm gonna manually kick it here by giving it another message which is now gonna look at its whole history. It's gonna see that it's, you know, created the plan.
+26:25
+Tim Lee: And then it's going to create a create a function. Tim Lee: create a function call.
+26:32
+Tim Lee: And so Tim Lee: you might be wondering yourself like, Hey, wait a second.
+26:39
+Tim Lee: You just said that it does a function call or an output. But let's see, check this out in my artifacts. Now I have my plan.
+26:46
+Tim Lee: So my plan now exists here. So that meant it successfully called my function.
+26:52
+Tim Lee: But then it created this Tim Lee: output it again. So how did that happen?
+26:57
+Tim Lee: Well, it's because in my agent. Tim Lee: after I do function calls.
+27:03
+Tim Lee: I Tim Lee: I give it another opportunity to take another action
+27:09
+Tim Lee: right? Because after after you wrote, I want to it to be able to, you know, do the next step. So now this is this is part of how
+27:22
+Tim Lee: agents and agentic design has to work, because if you don't do things like this which is ultimately going to cause a recursive chain. By the way, right? Because that's going to kick off to that which will kick off to that. That's what you want, right? But the challenge with that is that it's very easy in agentic frameworks to create infinite loops.
+27:43
+Tim Lee: They're not literally infinite loops. But it's literally it's the Lm. Never knowing when to wind things up and finish up or get stuck in some loop and just ping, ponging back and forth. So that's why Lane chain and create on autogen. They will have a Max number of back and forth before they say, Hey, I don't think this Lm. Is going to figure it out, and they they, they cut it based on iteration counts.
+28:07
+Tim Lee: But you need to have something like this to kind of like after it generates a step. Kick it. One more, one more step to follow up. Okay, so this is milestone.
+28:17
+Tim Lee: you know, whatever that was 3. So but but the by the end has artifacts. Now, okay, let's let's take a look at what that means
+28:26
+Tim Lee: in in the actual message.
+28:31
+Tim Lee: So I just want to give you a visual for what I'm saying. Artifacts.
+28:38
+Tim Lee: so this is hopefully our last matches that we we had with it. Tim Lee: Let's see, history started with
+28:46
+Tim Lee: build. My plan. Tim Lee: It first, st remember, just gave me a verbal of the plan. It didn't didn't do a function call.
+28:53
+Tim Lee: I acknowledged it and said, It looks good. Tim Lee: I haven't. I have a I omitted something in the log which I want to add back in. But they actually there was a function call here, which which I should have added to the message history.
+29:06
+Tim Lee: But I didn't. And then it Tim Lee: was now updated.
+29:11
+Tim Lee: and then and then it echoes back this thing. Tim Lee: So
+29:20
+Tim Lee: oh, I think there's a Tim Lee: oh, it's not showing me this, the 1st message.
+29:26
+Tim Lee: For some reason I might have. I might have injected the bugs. I was messing around. But you see, the the whole 1st system message is missing where it identifies it as an agent. Sorry about that. So I'll have to fix that later. But basically, that's where actually, it would have echoed the whole 1st file in that 1st message in that 0. If message that also has the system prompt
+29:46
+Tim Lee: because I have to fix, I have to fix that later. Tim Lee: Okay, so we're we're we're we're warming up. We have the ability to now save files.
+29:59
+Tim Lee: and we have the ability to create a plan. And it looks, I mean, this looks. Let's let's take a quick look at it.
+30:07
+Tim Lee: So we're gonna set up the project structure first, st we're gonna implement the header 1st
+30:13
+Tim Lee: May hero Tim Lee: feature. Tim Lee: Okay? It seems reasonable, right? But
+30:23
+Tim Lee: I mean, maybe one step better is you could do like you could have like a test here. You could ask asset for each section like, make sure you understand what success of the of the milestone looks like. So, for example, in this header, maybe at the center.
+30:38
+Tim Lee: the the center should be the logo should be centered, and the navigation buttons should be on the right hand side. Right? So that that's 1 thing that we could tweak with the prompt to make sure that, like, Hey, make sure you have a kind of a test, a a set of almost like verbal tests for each, each milestone. But nevertheless, I feel like a it's a reasonable set of like things here.
+30:57
+Tim Lee: So let's go to the next milestone, where we add an implementation agent. Tim Lee: Now, in this implementation agent. This is where things are going to get fun, and I want to be able to take, not the whole plan. But this implementation agent should take the 1st unmarked off milestone
+31:16
+Tim Lee: and then update the index dot HTML and styles dot you know. Css for that milestone.
+31:26
+Tim Lee: one thing I'd recommend as you're playing with this, which is Tim Lee: in your in your app, which is here.
+31:35
+Tim Lee: maybe take it instead of 1st trying it in parts. Just try instantiating your implementation agent
+31:44
+Tim Lee: and seeing if it can do its thing, just on its own before you try to plug it in, together with the planning agent and the implementation agent.
+31:56
+Tim Lee: However, ultimately the goal of this milestone is, you want them, these 1st 2 agents to be playing together, and so, in order to do that, you're gonna add, or one way to do that is, you know, adding a function in the agent
+32:09
+Tim Lee: that allows a tool that allows it to call or delegate to other agents. In my case I just called it call agent.
+32:18
+Tim Lee: and I pass as a parameter the agent name implementation Tim Lee: whenever an agent, an agent should understand. Hey! I have these other roles available to me, and I can delegate to it when whenever necessary.
+32:33
+Tim Lee: So that's that's this, and involves that Tim Lee: I forgot to mention to you. So
+32:40
+Tim Lee: in order to implement the update artifacts just for fun, I I did it, and I encourage you to do it, using the open AI function calling just to see the difference between implementing it. You know ourselves and implementing it, using their mechanisms.
+32:58
+Tim Lee: And so I think I probably linked to it somewhere. Maybe I maybe I maybe I don't. I don't know.
+33:10
+Tim Lee: So we maybe we can talk briefly about. You know how this function calling works. So the this is actually the same flow chart that you have. In your manual function calling.
+33:23
+Tim Lee: Now, the difference is for them Tim Lee: is Tim Lee: we're actually still the same here. This is this says, choose a design, a function that you wanted to call. We did that last week.
+33:34
+Tim Lee: Step 2. We actually did as well. It's saying, Hey, find a way to describe a function. So we we all came up with different ways of describing a function. Now, if you're playing the game with Openai, you have to describe the function in their way, which is via this Json schema.
+33:49
+Tim Lee: So that's how they're expressing Tim Lee: to the Llm. What functions are available you have to. You have to put it as this Json blob.
+33:57
+Tim Lee: which is fine. That's pretty straightforward to create. Tim Lee: And then
+34:03
+Tim Lee: The other difference is, instead of passing Tim Lee: so for us, we passed the function, call into the system message and said.
+34:11
+Tim Lee: hey? These are the tools available to you. Tim Lee: When you're using Openai, you pass it in
+34:17
+Tim Lee: as an array and your tools parameter. And then behind the scenes. It's injecting that description of functions into the the system prompt.
+34:31
+Tim Lee: However, it's also doing some extra stuff like
+34:37
+Tim Lee: inspect, like trying to. It's trying to help the agent or Lm either call your function more consistently, or call it in the way that you're, you know, with the right, with the right parameters.
+34:51
+Tim Lee: And then, finally, the last difference is that Tim Lee: when you're reading the output of the functions for us, we had to parse it
+35:01
+Tim Lee: for Openai. It's Tim Lee: provided as part of the argument response, where you you have a parameter in the, in the, in the thing called that's a tool call. So if if there was a function call. Then this will be a non empty array with the tool call.
+35:23
+Tim Lee: Okay? And Sabrish has asked questions. How does one think about the boundary of responsibility each agent should have. So
+35:30
+Tim Lee: I think that. Tim Lee: you know, a year ago, when people were 1st playing with Lms, they were really kind of like
+35:38
+Tim Lee: doing a lot of. Tim Lee: you know. Funny prompts like you are the, you know, the best implementer in the world, and you are super senior architect and like such and such thing. And maybe back. Then it was a requirement and actually impacted things these days as the training has evolved.
+35:57
+Tim Lee: basically, good prompts is essentially good human communication and a good human design. So what
+36:06
+Tim Lee: sabree says? Well, what boundary should you have? Well, what boundary would you have in a real team.
+36:12
+Tim Lee: you know, so trying to create real delineations. People who are experts in doing agentic programming. They really talk about like
+36:22
+Tim Lee: talk, pretend that they're like a junior developer on your team. Tim Lee: And that's kind of like a good communication to a junior developer is is a clear communication to a junior developer is is kind of a clear communication to
+36:33
+Tim Lee: you know the the Llm. So Tim Lee: alright, let's let's do the let's review the final boss move, which is a very challenging thing, which is okay. We can. We now have this planner that can make make a plan that that's actually pretty easy to do. We can have an implementer
+36:50
+Tim Lee: that can that can actually generate some index index dot HTML, and and styles that Css, and and that that would be okay.
+36:58
+Tim Lee: although there will be some complexities. Tim Lee: But here is the challenging thing we want to bring in a supervisor. Now
+37:06
+Tim Lee: you are gonna babysit this until all the milestones are checked off.
+37:12
+Tim Lee: and you're going to be inspecting the artifacts right? You know. You can see what whether the plant's been marked off or not.
+37:18
+Tim Lee: and you can keep on, you know, going and making sure that that
+37:24
+Tim Lee: loop continues until the plan is completed.
+37:31
+Tim Lee: One thing you should know, and you should expect is like Tim Lee: this is gonna probably.
+37:38
+Tim Lee: unless you're really lucky, or or whatever Tim Lee: it's probably not going to be good index, dot HTML, and styles and sense that it will not look like enough like the mock to make you happy.
+37:50
+Tim Lee: And but it'll be a victory just to have it like moving along. Tim Lee: Then you start to use all these tips and tricks that people use in these types of systems. One is, you know, introducing the concept of review
+38:05
+Tim Lee: right? So I think we some of us have observed that if you tell an a prompt to analyze what it just told you, and check for errors, at least in my experience, 30 to 50% of the time, it'll catch at least one error successfully. Now, it's not a perfect system. If there are many situations that I've been in with Lm. Prompting, where, like it never catches the error that I can see, and it never gets out of the situation, but at least it can maybe capture an easy error.
+38:34
+Tim Lee: Right? Tim Lee: Another another cool thing that you can do within the same vein is you can provide it visual feedback.
+38:43
+Tim Lee: So this is an advanced move, but like taking a screenshot of your actual generated artifacts by a screenshot of the rendered index dot HTML, and then feeding that screenshot back to it and say, Hey, look! There's this issue here.
+39:00
+Tim Lee: right? And then, seeing if it can resolve it. Tim Lee: Okay? So I'm gonna do one
+39:05
+Tim Lee: final demo of this like supervisor agent kind of conceptually. So
+39:12
+Tim Lee: how does it generally work? So Tim Lee: I'm gonna take this opportunity to show you a little bit about crew. AI, so crew AI and Lane chain are both very similar now in Crew AI and Lane chain. Actually, they
+39:27
+Tim Lee: people rarely do something like this supervisor agent, because it it so rarely works
+39:33
+Tim Lee: right? And so in lane chain and an auto gen, and in in crew. AI! They do a more naive set of agents which is, let me let me do a crew. AI demo real quick.
+39:50
+Tim Lee: How did I close it?
+40:06
+Tim Lee: Okay? So this through AI agent team is going to
+40:12
+Tim Lee: plan out a trip for me. Tim Lee: So let's let's give this a try and see how this works. So I'm gonna say.
+40:23
+Tim Lee: okay, let's see here.
+40:30
+Tim Lee: Oh, whoops! Tim Lee: Alright.
+40:44
+Tim Lee: I'm in the virtual environment. Tim Lee: Okay, I'm I'm not gonna spend too much time debugging this. michael maya: I think you're trying to run python on a ruby file.
+40:53
+Tim Lee: No. But then I fixed it to the python.
+40:59
+Tim Lee: Okay, so Tim Lee: I'm in the virtual environment, I mean, I guess I could try to install the requirements again.
+41:06
+Tim Lee: That's kinda I'm just trying to think about why I just ran this demo. So I'm trying to think about why my requirements went away
+41:12
+Tim Lee: anyway.
+41:26
+Tim Lee: Give this a minute.
+41:40
+Tim Lee: Oh, that's Tim Lee: why is it acting like I've never run this before.
+41:55
+Tim Lee: Okay, while it's going. Let's let's look at. Let's look at what? What crew and agents more typically do so in this thing. Here I have 3 agents, a city selection, a local expert, and a travel concierge.
+42:08
+Tim Lee: So inside of an agent. Tim Lee: if I look at a particular agent
+42:16
+Tim Lee: just like I was mentioning, the agent is essentially a very lightweight holder of a of a prompt. Now this prompt is actually very lightweight. It's you are. This is the entirety of the it's system prompt. You are an expert in analyzing travel data to pick ideal destinations.
+42:35
+Tim Lee: now, one thing that crew AI does is it? Is it creates a conceptual separation between the agent and its task. So the agent
+42:46
+Tim Lee: is, hey? You're a travel planner. And then you have this task, which is to do this thing, which maybe looks like a system prompt that we might write now under the hood. Of course it just glues these 2 things together for the prompt which it says so, you know, for this agent. When it's running it just
+43:05
+Tim Lee: running this task, you you just combine the fact that you are a guide, and then you're in. Your task right now is to expand this guide. And so in that sense, you can see the agents and tasks are really just like I said, these holders for these prompts.
+43:19
+Tim Lee: and then if you go back to the main, then when you have a bunch of them
+43:26
+Tim Lee: and you you create a crew which is putting them in array. But then, unlike. So if what this means is, there's no supervisor. It simply takes this this city selector gets the 1st input. Then the output of the city selector gets fed into the input of the local area expert and the output of the local expert gets fed into the travel concierge, including the output of the city selector. So now the travel concierge
+43:53
+Tim Lee: has the aggregated kind of output of both of these 2, and then it creates its output. So you can see it's a it's a it's a much more deterministic thing, and that's why that's the that's the origin of the word laying chain, because it it would create this like Middleware stack, essentially of kind of you know, prompts gluing, gluing together. So a lot of laying chain was just the parsing of that output, and then piping it into like the next one. Alright. So let's
+44:20
+Tim Lee: I'll try this once. I hope it works because I wanted to show you
+44:26
+Tim Lee: I wanted to show you how it does the supervision. Tim Lee: Okay?
+44:31
+Tim Lee: So something's happening.
+44:43
+Tim Lee: not doing its thing. Tim Lee: Okay. Tim Lee: Okay. So says, welcome to the trip, planner crew from where will you be traveling from? Okay. So I hit enter. So I have to restart it. Sorry.
+44:57
+Tim Lee: Alright. Last last attempt. Then we'll get Tim Lee: going over to the lab.
+45:02
+Tim Lee: Okay, where will you be driving from San Francisco. Tim Lee: where we go? I'm interested in understanding Las Vegas. Maybe this month. Let's see if there's any
+45:12
+Tim Lee: little thing here, and I'm kind of like Engulf these days. Tim Lee: Alright, so off it goes, and the cool thing is that
+45:20
+Tim Lee: God? What is it doing? It's doing like dozens of things. It's it's clearly doing something like pseudo intelligent.
+45:28
+Tim Lee: Now. The Tim Lee: kind of the funny thing about agents. And a lot of these agent Demos that you find online is.
+45:37
+Tim Lee: it's it's kind of conceptually cool that it's actually going and kind of like doing all this research for me. The the funny thing is like, when you look at the output. It's like, it's it's like, it's like it's like my 9 year old trying to make my like Las Vegas, you know. Plan. It's the most naive, you know. Silly, you know, plan. So there's
+45:56
+Tim Lee: so there's still hope for humanity as as having value in this in this society. All right. So while it's working, I'm gonna let's let's look at its thread and see
+46:07
+Tim Lee: kind of what's going on. So Tim Lee: I think I had to use yet another tracing name because it wasn't working well with lane fuse.
+46:17
+Tim Lee: Okay? So in this demo Tim Lee: check out the 1st
+46:24
+Tim Lee: thing that it's doing. So here's this 1st Lm, call. Tim Lee: and
+46:31
+Tim Lee: the pattern that it's following Tim Lee: is something called
+46:37
+Tim Lee: react react stands for
+46:42
+Tim Lee: reason, then action react. Tim Lee: So this
+46:49
+Tim Lee: prompt, which is really messily formatted.
+46:58
+Tim Lee: So I'm going to paste this in here. Tim Lee: Let's try to Tim Lee: look at it in a way that's
+47:05
+Tim Lee: let's try to break apart what's happening here. So Tim Lee: this 1st part you're well familiar with now, it's just a
+47:13
+Tim Lee: prompt Tim Lee: that has a goal. So here's your Tim Lee: here's your 1st thing. Your thing is, you're trying to select the best city based on whatever this is
+47:23
+Tim Lee: as of last week. You now understand what they're going with this. So they're actually not using function calling.
+47:30
+Tim Lee: They're saying Tim Lee: you, they're saying, you can use these tools.
+47:35
+Tim Lee: So here's a search, the Internet tool. Here's a tool description.
+47:41
+Tim Lee: tool arguments. Tim Lee: Here's another tool Tim Lee: tool description.
+47:48
+Tim Lee: So I don't know if I don't know if Lane Chain invented this concept. But
+47:54
+Tim Lee: part of the big value initially was, it kind of came up? This, we're like. This is where I 1st saw this pattern where this is how you you know, you kind of plug it in the world by just this format of like you literally just give it a few names of things, and you never really explicitly tell it to search the Internet or scrape website. Content you kind of rely on it to use its discretion, which is kind of a scary concept.
+48:17
+Tim Lee: Alright. And here's the final thing which you have not seen before, unless you've seen it outside this class. But it's saying, Hey, how? How do you know how to progress? And it's doing this thing where it says, I want you to take a thought
+48:31
+Tim Lee: make a thought right? And then, based on that thought. Tim Lee: decide on what the action should be and the action input.
+48:41
+Tim Lee: And then note, make an observation for like what? What the action input was. And then, you know.
+48:51
+Tim Lee: keep on going in that loop until your final thought is, hey? I think I've assembled enough stuff. And here's the final answer.
+49:00
+Tim Lee: So a lot of people ask like. Tim Lee: Wait, I understand. How is it to know how to do all this stuff
+49:06
+Tim Lee: you kind of like exported last week when you did the show times right? Like it kind of made it was starting to make those decisions about like, you know whether to continue or not, and that's how it knows when to wind down. Right? So, for example, in the final output here
+49:21
+Tim Lee: it came up with this itinerary for me.
+49:28
+Tim Lee: which she doesn't look Tim Lee: terrible.
+49:38
+Tim Lee: Right? So this is the ultimate ultimate outcome.
+49:43
+Tim Lee: $150 a night at mirage is that, could that be? Could that be true?
+49:50
+Tim Lee: And so let's let's see how this pattern played out. Tim Lee: So that's how the that's how the tee up was.
+49:56
+Tim Lee: and then inside of the 1st message. Tim Lee: Here's the here's where it gave you the task, and I won't paste. But notice how the last word here is thought.
+50:07
+Tim Lee: It's you're trying to cue it Tim Lee: to say, Hey, you know, make your thought observation so the completion of the assistant is, it naturally follows with that thought, and then it chooses to have the action
+50:23
+Tim Lee: to search for for weather, and that's where it ends right, because, remember. Tim Lee: these things will die on its own right. So what we do is we take that action, and then we, we do the action. We feed the result back into it, and then it continues. So, for example, where it goes from, there
+50:43
+Tim Lee: is Tim Lee: this thing, I believe Tim Lee: so. I wanted that action. I fed that action of the weather back into it, and then. Now it invented this thought.
+50:57
+Tim Lee: hey? Maybe I should scrape the content from this thing. And now it's now wants to do that next one.
+51:04
+Tim Lee: So let's let's Tim Lee: watch that progression.
+51:14
+Tim Lee: Okay. Tim Lee: yeah, miscount.
+51:21
+Tim Lee: So scrape the weather. Tim Lee: And then. Tim Lee: okay, there's it's it's deciding it's deciding to still scrape. Let me skip ahead here.
+51:36
+Tim Lee: So still not, I'm still not getting Tim Lee: events. I'm gonna change my approach and I'm gonna search it. I'm gonna try another search. Query
+51:46
+Tim Lee: and then, you know, eventually it it eventually it just gives up. I've not been able to find out. So let me just let me just move on to travel costs, and then here I search for costs. So you can kind of see, I mean, even though, like it's
+52:02
+Tim Lee: not General AI. Yet this pattern of kind of planning is is kind of a cool way of kind of, you know, chaining together a sequence of small actions.
+52:15
+Tim Lee: So this is kind of it's been around for a while. React. I'm sure you may have heard of it. But
+52:21
+Tim Lee: the it's still, it's still one of the most popular because of how easy it is to program
+52:27
+Tim Lee: right? All you had to do to program it was to literally give it those like 6 lines of guidance in the prompt. And then and then you you just need to parse it and then keep on. Keep on poking it until you're looking for. I have the final answer. So in Lane chain there's literally under the hood, like a parsing system where it's looking for it to say it's looking for this terminator that says final.
+52:54
+Tim Lee: and that's how it knows that it's done. Tim Lee: I'm gonna pause here. Any questions about is this. Okay? So Santiago says, is this training of events one of the things that chat gpt. Oh, one is doing behind the scenes, absolutely
+53:07
+Tim Lee: 100% right? And they've talked about it right? So they're doing also a version of this like creating a plan.
+53:15
+Tim Lee: doing a few steps of it, but then also dynamically modifying it right as depending on what it's what it's finding out or what it's doing. So it's injecting these extra loops right to try to improve its its output. So the fundamental model is actually the same.
+53:32
+Tim Lee: But it's it's almost like just putting a cycle of like thinking, which I think is a wise thing to do, because you know, how often does a person give you the smart thing in just one shot? Right? Hey? You know. What do you think about Xyz. Wow! It's this right that it's always much more successful to have a little bit of a rubber duck exchange
+53:54
+Tim Lee: right? Explore the thoughts. Tim Lee: do some research fold that in come back. And so it's really mimicking. I thought a more mature thinking pattern that is maybe more successful.
+54:09
+Tim Lee: so any other any other questions before we. Tim Lee: you know and and if you've been already working away at the milestones, that's totally fine.
+54:20
+Tim Lee: But that's that's kind of like planning Tim Lee: alright. So I'm gonna I'm gonna open up a breakout room, so we'll do the same thing as last time, which is
+54:30
+Tim Lee: rooms one to 10, Tim Lee: one to 10. Tim Lee: If you want to be a little more social cameras will be on cameras, will on in room one to 10 if you go in room one and 10 have the cameras on. Do some introductions, you know. Talk about your group project for for a second I'll let you sort yourself into rooms of like I'd recommend sizes of 3,
+54:53
+Tim Lee: you know. I noticed the rooms are getting a little bit big last time. So it's up to you. If you'd like that experience. Go for it
+54:58
+Tim Lee: otherwise I kind of encourage you to to do a smaller room rooms, one to 10 social rooms rooms, 11 to 12 friendly. You're definitely open, but you know maybe cameras can be on or off. It's it's your choice. And you won't be offended if people have their have their cameras off. So
+55:17
+Tim Lee: I'm gonna create the breakout rooms. I'm opening them. Oh, shoot! Shoot! Sorry! I'm gonna close the rooms.
+55:33
+Tim Lee: Sorry, my, my bad, I I meant to let you choose the rooms. Tim Lee: Okay, okay, Reop, reopening the rooms, reopening the rooms. All right. Off you go, one to 10 social rooms, cameras on introducing yourselves
+55:46
+Tim Lee: 11 to 2011 to 20, Tim Lee: less social.
+55:53
+Tim Lee: but still feel free to. Of course Tim Lee: you know, chat.
+56:28
+Tim Lee: Alright! Welcome back everyone.
+56:34
+Tim Lee: Anyone feel like you have a better understanding, at least of some level of agents.
+56:40
+Tim Lee: especially the crew AI or Lane chain agent system, which doesn't involve this. The hardest part, which is like
+56:49
+Tim Lee: passing. Harley Trung: But. Tim Lee: Agent calling other agents. That's the hardest move to do.
+56:55
+Tim Lee: But the idea, first, st that agents are segmented Tim Lee: system prompt. You know that. Do other, you know different scope things, and then the and that they have access to tools, and then they also do planning right? So even if they use that, like the react style, you know, is the most popular kind of like planning mechanism.
+57:16
+Tim Lee: So we had various people stuck at milestone. 3 various people stuck at milestone 4, which is kind of like what we expect for this this timing right? Because it takes a while to wrap your mind around. And I also want to avoid sending you into a very specific direction, because there's actually a lot of solutions for this. So I want you to kind of like play and think about what pattern like don't do not get stuck on like. What pattern should it be? Just think about like, well, how might I get this to work
+57:44
+Tim Lee: right? Because that's the state of where things are at. Now. Let's maybe let's let's let's focus on people who are stuck or working on milestone 4, which is calling the implementation agent and let's wrap up by like picking any random group that was working on implementation agent
+58:04
+Tim Lee: and kind of like. Let's take a look at where what approach you were taking? Tim Lee: Any volunteers to kind of like review what your group was was doing with
+58:17
+Tim Lee: with implement, with with milestone, 4 calling the implementation agent.
+58:23
+Priyanka Shah: Our group was trying to figure out the right approach. Tim Lee: Were you? Were you all on 4.
+58:28
+Priyanka Shah: We were on phone. Yeah, we were trying to get to 4. Yeah on phone. Tim Lee: You navigated 3. Got to 4. And do you mind sharing your code? Let's look. Let's take a look at what you all did. And, by the way, everyone
+58:40
+Tim Lee: well, I mean, I was kind of like guiding a certain direction, although, like like, I said, that's just unapproached. Right? So Priya, you open to sharing your screen, or someone.
+58:49
+Priyanka Shah: We didn't really get that far. So if somebody got forward. Tim Lee: Let's let's take a look at, you know, even at that level, you know, and then we'll at least get you unstuck from where you were at.
+59:02
+Priyanka Shah: So we did actually add a new, prompt, a pretty basic prompt, you know, just to
+59:07
+Priyanka Shah: you're going, which is, hey? You have to write the code. And you like, generate these specific files. Given the plan
+59:13
+Priyanka Shah: and update the plan as well as you complete each stone. Priyanka Shah: it was a very basic form.
+59:19
+Priyanka Shah: What we were debating or trying to work through is Priyanka Shah: the implementation agent, which is a very bare bones truck right now, it kind of is a surplus of agent. And in
+59:32
+Priyanka Shah: base agent we're trying to figure out, where do we actually execute the. So we have a new
+59:41
+Priyanka Shah: there. This is the new function that we were defining, which will be the one that will update the implementation artifacts right, the the HTML or the Css files
+59:53
+Priyanka Shah: and in base agent. I think we are trying to see if we could do the if call on.
+59:59
+Priyanka Shah: since we already make another call to Openai at the end of lighting plan.md. The artifact we are trying to pass like this new tool or the new function there in this call.
+1:00:10
+Priyanka Shah: And then Priyanka Shah: this probably should become a while loop where we are.
+1:00:15
+Priyanka Shah: where, if the function name becomes like this new function name. Priyanka Shah: then we will call the implementation date. So we will define implementation agent, dot, execute, or something like this. Probably not the right. I don't know.
+1:00:28
+Priyanka Shah: We were still debating what to do. The right. Tim Lee: Well, I mean, like the gist of this could could actually work. I mean, if some I think there's maybe some indentation issues. I feel like 1 0, 8 should be on the same indentation level as line 86, right? Because, like, you know, it's another function.
+1:00:43
+Tim Lee: or like, if I'm understanding. Tim Lee: If function, name right, if function name, that means that a a function is being called some function got called, then a line 86. Okay, that happened to be update artifact. So there should be, else that lines up with that. That says, you know that function? And yeah, like, so I think that's this is a certainly a general approach that this direction could certainly work right? And so what you, what I would do in this case is in the planning agent prompt. I would modify the prompt
+1:01:15
+Tim Lee: to queue it a little bit harder to like delegate the implementation to that call. So, for example, hey, the user as a user may want to begin their implementation. You know, you can delegate to this other agent right
+1:01:35
+Tim Lee: to encourage it to call that so the 1st victory is when your call agent function fires and it's trying. It's trying to reach out to this other Sd, you know, and then, like, just like you were doing at that point, I would instantiate the implementation agent.
+1:01:52
+Tim Lee: and then I would call execute on it to give it an opportunity to do its thing. That's only going to take you one step
+1:01:57
+Tim Lee: right. It's only gonna do at most one thing, and it may not, you know, won't even save the file unless you add another call into it at the very, at the very most. Maybe all you would see is in the chain lit. It would spit out index. Dot HTML and styles that css, but that's the beginning. Right from that point on you can. You know.
+1:02:19
+Tim Lee: Add another. Lm, step in there right to to have it save the file. But I think the the interesting thing here is like, what is the simplest state machine that we can do to kind of like. Get this to be flowing as in an endless.
+1:02:36
+Tim Lee: like a set of recursive calls right? And so for the implementation, though that's not your purpose. Your really purpose is just to set it up where you have 2 agents, and then the implementation agent is attempting to generate its 1st artifact, then in the supervisor agent. That's when you're really saying, Hey, let's play around with this react
+1:02:54
+Tim Lee: prompt style, which is the one that we showed in the screenshot or in the in a trace where they have the thought and action, you could do something similar to it. You can get inspired by it to like
+1:03:06
+Tim Lee: describe a flow by which it will continuously, you know. assess analyze, then, ultimately, like, Call, you know, the the implementation agent? And then you can start to bring in more sophisticated things like the reviewer and so on. You know, I'm not really expecting people to get that far this week.
+1:03:26
+Tim Lee: because I marked I noticed I marked all those as optional for for this week's submission, because this is just for for funsies, a little bit. And so you can spend the majority of your time on your capstone this week. But anyway. Hopefully, this was a.
+1:03:41
+Tim Lee: you know, useful introduction to the challenge of I think the 1st part of agents is actually relatively straightforward. It's really this last thing of of kind of like setting up this infinite State machine.
+1:03:52
+Tim Lee: That is the most I think challenging aspect of agents, but also one just to call out that people are still not really doing actively yet because of, you know.
+1:04:04
+Tim Lee: you know, you're really spawning it to do its to do its own, its own thing right. And then your mission is like kind of like how you saw the trip planning thing work for me where it started firing off like 2 dozen calls
+1:04:16
+Tim Lee: to ultimately generate that final plan. Tim Lee: So sorry I'm running a little bit over today. But I think that was, that concludes, like today's exercise of building Mini Devon
+1:04:28
+Tim Lee: as well as your own, you know, agent framework, which you can continue to build on and and extend from here.
+1:04:37
+Tim Lee: Other than that, I'll I'll let you guys sign off and have a good night. I'll hang back to answer Harley. If I can't discuss your question here.
+1:04:45
+Tim Lee: So Tim Lee: do you want to elaborate on Tim Lee: function calls on function calls and different threads like? Tell me what you meant by that
+1:04:52
+Tim Lee: sense. Harley Trung: Yeah. So the the base agent, right? Instead of calling the the function call that runs the logic. It calls another agent.
+1:05:02
+Harley Trung: The abstraction is that agent, then, has the function call. But when sometimes you're like, should I go back to the parent right to orchestrate? Or should I just call the sibling, and that's when you have to design the function calls. I think wrapping in the agent concept is a nice abstraction.
+1:05:22
+Tim Lee: Makes sense cool. Tim Lee: Okay. Alright. See, you guys later have a good night. denisura: Quick question, for if if just to clarify, so each agent might have a different set of functions that's defined for that specific agent right.
+1:05:36
+Tim Lee: Yes, yes, now we I I kind of simplified it in this case, and I put everyone had the same tools
+1:05:41
+Tim Lee: in the base agent. just for you know, because it's a lab. But yeah, in practice certainly different. It's very likely that agents will have different tools.
+1:05:54
+denisura: And when we have, like generic, like the message, the history that we have history, like the main history, where we calling different functions. And then, if Agent read this
+1:06:07
+denisura: history and sees this function, he can execute on this function right. Tim Lee: That's right, and then like. But again, that's a discretionary thing, because you'll you'll find that when, if you were to say like right now, our policy for the base agent is that we include the full message history for each agent.
+1:06:24
+Tim Lee: Just to give it the whole context. The downside of it is that that can sometimes confuse the agent.
+1:06:31
+Harley Trung: You know so. Tim Lee: So it's up to you to understand like, Hey, what's the appropriate amount of context to feed into this agent, to let it focus on its thing, but also, you know, give it enough context, right?
+1:06:42
+Tim Lee: Right? So. denisura: Like into your. Tim Lee: There's cons to sharing like there's cons to the current policy of like sharing the entire message history for all agents.
+1:06:51
+denisura: Like. In theory, I can keep like different, like history. denisura: message history. For different like agents depend on. If this particular message relevant to this agent.
+1:07:05
+denisura: I will only to this agent I will keep it, but if it's might benefit other agent, I will just put it in kind of like main thread. Kind of thing right? It's like branching kind of thing.
+1:07:17
+Tim Lee: You have to kind of experiment with what works, because, like, when in the past, when I've kind of been tinkering around with it, and I gave it the full history. I saw that sometimes it would get it would start to take other actions. It would do. It would kind of like go away from the closely defined role
+1:07:35
+Tim Lee: that I wanted it to have. And then it would cause problems. Because, you know, the the machine didn't really expect it to be doing this other.
+1:07:43
+Tim Lee: you know thing, you know. So. denisura: Right. And another quick question is it possible to run multiple agent
+1:07:54
+denisura: at the same time, like a parallel kind of execution? Tim Lee: Of course, right? Because, like an Lm is a stateless concept.
+1:08:01
+Tim Lee: So it has no idea whether you're firing off to. Tim Lee: And you could reasonably like, I'll give you an example of. And this is a technique called self consistency. But you know some people will fire off the same call to the same model.
+1:08:16
+Tim Lee: same inputs. Tim Lee: and then compare their results. Tim Lee: And then and then choose one. And and
+1:08:24
+Tim Lee: that actually is not a terrible idea. And it's been shown to have improvements, because, you know, sometimes it's right, sometimes it's wrong, but like it's kind of like can be good at like saying, Oh, yeah, I was. I was, you know, 2 out of 3 times it said to do this right? So yeah, you could do as many parallel calls as you want.
+1:08:45
+denisura: Okay. Tim Lee: Hey? Can Dennis? Can you send me the article that you followed that you said work, function calling wise? I want to kind of like diff.
+1:08:52
+denisura: I know why, why it did not work. The example in the article didn't specify that you should put
+1:08:59
+denisura: like tools denisura: like, use those after
+1:09:05
+denisura: this additional parameters that allow you to like execute tools, because when I, when I tried it, told me, that's like, Oh, function is not supported for your model. So I was like, I tried to find the model that does work. Then I can Google it, of course. And I found the Github repo that uses functions, not tools to specify functions. It does use this like use, function.
+1:09:31
+Tim Lee: Been using? Gpt. 4. 0, I guess. Which model have you been using.
+1:09:36
+denisura: I was using 4 point. Oh, oh, I mean Gpt for all right, but because I didn't specify this like use tool or like, like, I think it's like use tool flag. So after it, it didn't kinda like it was complaining, and I got I was getting errors.
+1:09:55
+denisura: but I saw right now in the code that if I specify the use tools and and put like auto, it actually should work.
+1:10:02
+denisura: So that that was the part that was missing in this one. So. Tim Lee: Okay. Good to know. Alright, alright, thanks everybody. Alright! I'll see you later. Have a good night.
+1:10:10
+itasari: Thanks. Tim. Good night.
