@@ -15,7 +15,7 @@ The demo is made up of the following:
 
 To run locally:
 
-1. Run `fastapi dev server.py` at the root directory of this repo to start the backend service. It may need a minute to load the documents into the ingestion pipeline to prepare the vectore store index.
+1. Run `fastapi dev server.py` OR `uvicorn server:app --reload` at the root directory of this repo to start the backend service. It may need a minute to load the documents into the ingestion pipeline to prepare the vectore store index.
 2. Clone `https://github.com/ykay/student-dashboard.git` into a local project directory.
 3. Run `npm run dev` in the cloned directory to start the web app.
 
